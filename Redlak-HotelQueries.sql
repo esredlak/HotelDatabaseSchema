@@ -65,6 +65,50 @@ WHERE CONCAT( g.FirstName , " " , g.LastName ) LIKE 'Mack Simmer';
 		-- "Mack Simmer",206,2023-11-22,2
 		-- "Mack Simmer",301,2023-11-22,4
 
+-- 4. Write a query that returns a list of rooms, reservation ID, and per-room cost for each reservation. 
+-- The results should include all rooms, whether or not there is a reservation associated with the room.
+
+SELECT DISTINCT
+	rm.RoomNumber,
+	res.ReservationId,
+    ( rt.BasePrice + ( COALESCE(rt.PricePerAddAdult,0) * GREATEST(( res.NumberAdults - rt.StandardOccupancy ),0)) + COALESCE(a.AddCost, 0) ) AS 'Price Per Night'
+    -- COALESCE finds the first value that is not null (replaces null with zero here). GREATEST is used to ignore negatives (we don't give discounts for having lower than StandardOccupancy)
+FROM Room rm
+INNER JOIN RoomType rt ON rm.RoomType = rt.RoomType
+LEFT JOIN RoomReservation rr ON rm.RoomNumber = rr.RoomNumber
+LEFT JOIN Reservation res ON res.ReservationId = rr.ReservationId
+INNER JOIN RoomAmenity ra ON ra.RoomNumber = rm.RoomNumber
+INNER JOIN Amenity a ON ra.AmenityName = a.AmenityName
+GROUP BY res.ReservationId, rm.RoomNumber
+ORDER BY RoomNumber ASC;
+
+		# RoomNumber, ReservationId, Price Per Night
+		# '201', '4', '199.9900'
+		# '202', '7', '174.9900'
+		# '203', '2', '199.9900'
+		# '203', '21', '199.9900'
+		# '204', '16', '184.9900'
+		# '205', '15', '174.9900'
+		# '206', '12', '149.9900'
+		# '206', '23', '149.9900'
+		# '207', '10', '174.9900'
+		# '208', '13', '149.9900'
+		# '208', '20', '149.9900'
+		# '301', '9', '199.9900'
+		# '301', '24', '199.9900'
+		# '302', '6', '184.9900'
+		# '302', '25', '174.9900'
+		# '303', '18', '199.9900'
+		# '304', '14', '184.9900'
+		# '305', '3', '174.9900'
+		# '305', '19', '174.9900'
+		# '306', NULL, NULL
+		# '307', '5', '174.9900'
+		# '308', '1', '149.9900'
+		# '401', '11', '399.9900'
+		# '401', '17', '419.9900'
+		# '401', '22', '399.9900'
+		# '402', NULL, NULL
 
 
 -- 5. Write a query that returns all the rooms accommodating at least three guests and that are reserved on any date in April 2023.
@@ -119,23 +163,4 @@ WHERE g.Phone LIKE '4463516860';
 		-- Name, Street, City, State, ZIP, Phone
 		-- 'Maritza Tilton', '939 Linda Rd', 'Burke', 'VA', '22015', '4463516860'
 
--- 4. Write a query that returns a list of rooms, reservation ID, and per-room cost for each reservation. 
--- The results should include all rooms, whether or not there is a reservation associated with the room.
 
-SELECT DISTINCT
-	rm.RoomNumber,
-	res.ReservationId,
-    ( rt.BasePrice + ( COALESCE(rt.PricePerAddAdult,0) * ( res.NumberAdults - rt.StandardOccupancy )) + COALESCE(a.AddCost, 0) ) AS 'Price Per Night', -- when there are less than standard occupancy the price is reduced. stop this.
-    rt.BasePrice,
-    rt.PricePerAddAdult,
-    res.NumberAdults,
-    rt.StandardOccupancy,
-    a.AddCost
-FROM Room rm
-LEFT JOIN RoomType rt ON rm.RoomType = rt.RoomType
-LEFT JOIN RoomReservation rr ON rm.RoomNumber = rr.RoomNumber
-LEFT JOIN Reservation res ON res.ReservationId = rr.ReservationId
-INNER JOIN RoomAmenity ra ON ra.RoomNumber = rm.RoomNumber
-INNER JOIN Amenity a ON ra.AmenityName = a.AmenityName
-GROUP BY res.ReservationId, rm.RoomNumber
-ORDER BY RoomNumber ASC;
