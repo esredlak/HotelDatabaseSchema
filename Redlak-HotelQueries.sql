@@ -10,7 +10,7 @@ use ReservationSchema;
 	FROM Reservation r 
 	INNER JOIN RoomReservation rr ON r.ReservationId = rr.ReservationId
 	INNER JOIN Guest g ON r.GuestId = g.GuestId
-	WHERE r.EndDate BETWEEN '2023-07-01' AND '2023-08-01';
+	WHERE r.EndDate BETWEEN '2023-07-01' AND '2023-07-31';
 			
 		-- Name, RoomNumber,StartDate,EndDate
 		-- "Eric Redlak",205,2023-06-28,2023-07-02
@@ -65,6 +65,7 @@ WHERE CONCAT( g.FirstName , " " , g.LastName ) LIKE 'Mack Simmer';
 		-- "Mack Simmer",206,2023-11-22,2
 		-- "Mack Simmer",301,2023-11-22,4
 
+
 -- 4. Write a query that returns a list of rooms, reservation ID, and per-room cost for each reservation. 
 -- The results should include all rooms, whether or not there is a reservation associated with the room.
 
@@ -115,7 +116,7 @@ ORDER BY RoomNumber ASC;
 
 SELECT
 	rr.RoomNumber,
-    (res.NumberAdults + res.NumberChildren) AS 'Total # Guests'
+    (res.NumberAdults + res.NumberChildren) AS 'Total Number of Guests'
     FROM RoomReservation rr
     LEFT JOIN Reservation res ON res.ReservationId = rr.ReservationId
     WHERE ((res.StartDate BETWEEN '2023-04-01' AND '2023-05-01') OR (res.EndDate BETWEEN '2023-04-01' AND '2023-05-01'))
@@ -128,7 +129,7 @@ SELECT
 
 SELECT
 	CONCAT( g.FirstName , " " , g.LastName ) AS Name,
-    COUNT( res.ReservationId ) As '# of Reservations'
+    COUNT( res.ReservationId ) As 'Number of Reservations'
 FROM Reservation res
 LEFT JOIN Guest g ON g.GuestId = res.GuestId
 GROUP BY g.FirstName , g.LastName 
@@ -158,7 +159,7 @@ SELECT
     g.ZIP,
     g.Phone
 FROM Guest g
-WHERE g.Phone LIKE '4463516860';
+WHERE g.Phone = '4463516860';
 
 		-- Name, Street, City, State, ZIP, Phone
 		-- 'Maritza Tilton', '939 Linda Rd', 'Burke', 'VA', '22015', '4463516860'

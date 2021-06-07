@@ -13,6 +13,7 @@ CREATE TABLE `RoomType` (
     PRIMARY KEY (`RoomType`)
 );
 
+-- best to use numbers as primary keys and not char
 CREATE TABLE `Amenity` (
 	`AmenityName` CHAR(30) NOT NULL,
     `AddCost` DECIMAL(19,4),

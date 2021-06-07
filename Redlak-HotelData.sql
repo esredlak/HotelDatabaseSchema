@@ -1,17 +1,17 @@
 USE reservationschema;
 
-INSERT IGNORE INTO Amenity (AmenityName, Description, AddCost) 
+INSERT INTO Amenity (AmenityName, Description, AddCost) 
 	VALUES 	('Microwave' , 'Nukes food', NULL),
 			('Refrigerator' , 'Cools food' , NULL),
             ('Oven' , 'Warms food' , NULL),
             ('Jacuzzi' , 'Warms body', 25);
             
-INSERT IGNORE INTO RoomType (RoomType, MaximumOccupancy, StandardOccupancy, BasePrice, PricePerAddAdult)
+INSERT INTO RoomType (RoomType, MaximumOccupancy, StandardOccupancy, BasePrice, PricePerAddAdult)
 	VALUES 	('Single' , 2 , 2 , 149.99 , NULL ),
 			('Double' , 4 , 2 , 174.99 , 10 ),
             ('Suite' , 8 , 3 , 399.99 , 20 );
             
-INSERT IGNORE INTO Room (RoomNumber, RoomType, ADAAccessible)
+INSERT INTO Room (RoomNumber, RoomType, ADAAccessible)
 	VALUES 	(201 , 'Double' , 0),
 			(202 , 'Double' , 1),
             (203 , 'Double' , 0),
@@ -31,7 +31,7 @@ INSERT IGNORE INTO Room (RoomNumber, RoomType, ADAAccessible)
             (401 , 'Suite' , 1),
             (402 , 'Suite' , 1);
             
-INSERT IGNORE INTO RoomAmenity (RoomNumber , AmenityName)
+INSERT INTO RoomAmenity (RoomNumber , AmenityName)
 	VALUES 	(201 , 'Microwave'),
 			(201 , 'Jacuzzi'),
             (202 , 'Refrigerator'),
@@ -71,7 +71,7 @@ INSERT IGNORE INTO RoomAmenity (RoomNumber , AmenityName)
             (402 , 'Refrigerator'),
             (402 , 'Oven');
             
-INSERT IGNORE INTO Guest (FirstName , LastName , Street , City , State , ZIP, Phone)
+INSERT INTO Guest (FirstName , LastName , Street , City , State , ZIP, Phone)
 	VALUES	('Eric' , 'Redlak' , '1337 Swashbuckler Way' , 'Pooler' , 'GA' , '31322' , '9126742203'),
 			('Mack' , 'Simmer' , '379 Old Shore St' , 'Council Bluffs' , 'IA' , '51501' , '2915530508'),
             ('Bettyann' , 'Seery' , '750 Wintergreen Dr' , 'Wasilla' , 'AK' , '99654' , '4782779632'),
@@ -85,7 +85,7 @@ INSERT IGNORE INTO Guest (FirstName , LastName , Street , City , State , ZIP, Ph
             ('Maritza' , 'Tilton' , '939 Linda Rd' , 'Burke' , 'VA' , '22015' , '4463516860'),
             ('Joleen' , 'Tison' , '87 Queen St' , 'Drexel Hill' , 'PA' , '19026' , '2318932755');
             
-INSERT IGNORE INTO Reservation (GuestId , NumberAdults , NumberChildren , StartDate , EndDate )
+INSERT INTO Reservation (GuestId , NumberAdults , NumberChildren , StartDate , EndDate )
 	VALUES 	( (SELECT g.GuestId FROM Guest g WHERE g.FirstName = 'Mack' AND g.LastName = 'Simmer') , 1 , 0 , '2023-02-02' , '2023-02-04'),
             ( (SELECT g.GuestId FROM Guest g WHERE g.FirstName = 'Bettyann' AND g.LastName = 'Seery') , 2 , 1 , '2023-02-05' , '2023-02-10'),
             ( (SELECT g.GuestId FROM Guest g WHERE g.FirstName = 'Duane' AND g.LastName = 'Cullison') , 2 , 0 , '2023-02-22' , '2023-02-24'),
@@ -112,7 +112,7 @@ INSERT IGNORE INTO Reservation (GuestId , NumberAdults , NumberChildren , StartD
             ( (SELECT g.GuestId FROM Guest g WHERE g.FirstName = 'Mack' AND g.LastName = 'Simmer') , 2 , 2 , '2023-11-22' , '2023-11-25'),
             ( (SELECT g.GuestId FROM Guest g WHERE g.FirstName = 'Maritza' AND g.LastName = 'Tilton') , 2 , 0 , '2023-12-24' , '2023-12-28');
             
-INSERT IGNORE INTO RoomReservation (RoomNumber , ReservationId)
+INSERT INTO RoomReservation (RoomNumber , ReservationId)
 	VALUES 	(308 , (SELECT r.ReservationId FROM Reservation r 
                 INNER JOIN Guest g ON g.GuestId = r.GuestId
                 WHERE g.FirstName = 'Mack' AND g.LastName = 'Simmer' AND r.NumberAdults = 1 AND r.NumberChildren = 0 AND r.StartDate = '2023-02-02' )),
